@@ -1,5 +1,6 @@
 package org.example.tacocloud.domains;
 
+import jakarta.persistence.Entity;
 import lombok.Data;
 
 @Data
