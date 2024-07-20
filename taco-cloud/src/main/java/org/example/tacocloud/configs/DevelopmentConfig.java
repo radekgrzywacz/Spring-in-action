@@ -1,19 +1,24 @@
 package org.example.tacocloud.configs;
 
 import org.example.tacocloud.domains.Ingredient;
+import org.example.tacocloud.domains.User;
 import org.example.tacocloud.repositories.IngredientRepository;
+import org.example.tacocloud.repositories.UserRepository;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.example.tacocloud.domains.Ingredient.Type;
+import org.springframework.context.annotation.Profile;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 
 @Configuration
-public class DataLoaderConfig {
+@Profile("!prod")
+public class DevelopmentConfig {
 
 
     @Bean
-    public ApplicationRunner dataLoader(IngredientRepository repo) {
+    public ApplicationRunner ingredientDataLoader(IngredientRepository repo) {
         return args -> {
             repo.save(new Ingredient("FLTO", "Flour Tortilla", Type.WRAP));
             repo.save(new Ingredient("COTO", "Corn Tortilla", Type.WRAP));
@@ -27,4 +32,14 @@ public class DataLoaderConfig {
             repo.save(new Ingredient("SRCR", "Sour Cream", Type.SAUCE));
         };
     }
+
+    @Bean
+    public ApplicationRunner userDataLoader(UserRepository repo, PasswordEncoder passwordEncoder) {
+        return args -> {
+            repo.save(new User("radox", passwordEncoder.encode("password"), "Radek", "Rolna", "Kato", "Slask", "40-555", "502871468"));
+        };
+    }
+
+
+
 }

@@ -1,6 +1,35 @@
 spring:
-    application:
-        name: taco-cloud
-    datasource:
-        generate-unique-name: false
-        name: tacocloud
+  profiles:
+    active: dev
+  security:
+    user:
+      name: buzz
+      password: infinity
+  datasource:
+    generate-unique-name: false
+    name: tacocloud
+
+taco:
+  orders:
+    page-size: 10
+
+
+  discount:
+    codes:
+      abcdef: 10
+
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  datasource:
+    url: jdbc:mysql://localhost/tacocloud
+    username: tacouser
+    password: tacopassword
+
+logging:
+  level:
+    tacos: WARN
