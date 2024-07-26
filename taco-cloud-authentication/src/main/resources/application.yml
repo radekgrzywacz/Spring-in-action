@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: taco-cloud-authentication
+server:
+  port: 9000
+

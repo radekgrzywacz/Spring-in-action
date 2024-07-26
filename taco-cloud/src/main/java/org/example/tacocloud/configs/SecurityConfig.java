@@ -4,6 +4,8 @@ import org.example.tacocloud.domains.User;
 import org.example.tacocloud.repositories.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -39,7 +41,9 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorizeRequests -> {
                     authorizeRequests
-                            .requestMatchers("/design", "/orders").hasRole("USER")
+                            .requestMatchers(HttpMethod.OPTIONS).permitAll()
+                            .requestMatchers(HttpMethod.POST, "/api/ingredients").hasAuthority("SCOPE_writeIngredients")
+                            .requestMatchers(HttpMethod.DELETE, "/api/ingredients").hasAuthority("SCOPE_deleteIngredients")
                             .requestMatchers("/", "/**").permitAll();
                 })
                 .formLogin(form -> form
@@ -47,7 +51,8 @@ public class SecurityConfig {
                         .defaultSuccessUrl("/design")
                 )
                 .logout((logout) -> logout.logoutUrl("/logout")
-                        .logoutSuccessUrl("/login"));
+                        .logoutSuccessUrl("/login"))
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
 
 
         return http.build();
